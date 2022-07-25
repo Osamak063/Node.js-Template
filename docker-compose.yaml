@@ -1,0 +1,30 @@
+# docker-compose up -d --no-deps --build robot-api robot-core
+version: '3'
+services:
+  order-api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
+    depends_on:
+      - order-mongodb
+
+  order-mongodb:
+    image: mongo
+    container_name: order-mongodb
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  static:
+  mongodb_data:
+    driver: local
+
+networks:
+  # Declare our private network.  We must declare one for the magic
+  # Docker DNS to work, but otherwise its default settings are fine.
+  network: {}
